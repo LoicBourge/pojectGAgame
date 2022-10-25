@@ -8,7 +8,7 @@ public class Environment {
     private Coordinates begin;
     private Coordinates end;
 
-    private String[][] plateau;
+    private EnvironmentTile[][] grid;
 
     public Environment(int m, int n) {
         this.m = m;
@@ -25,26 +25,26 @@ public class Environment {
             n=Integer.parseInt(nextLine[1]);
             begin=new Coordinates(nextLine[2]);
             end= new Coordinates(nextLine[3]);
-            plateau=new String[m][n];
+            grid =new EnvironmentTile[m][n];
             int i=0,j=0;
             while ((nextLine = reader.readNext()) != null)
             {
                 for(String token : nextLine)
                 {
-                    plateau[i][j]=token;
-                    System.out.print(token);
+                    grid[i][j]=EnvironmentTile.values()[Integer.parseInt(token)];
+                    //System.out.print(token);
                     j++;
                 }
                 i++;
                 j=0;
-                System.out.print("\n");
+                //System.out.print("\n");
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-        System.out.println(Arrays.deepToString(plateau));
+        System.out.println(Arrays.deepToString(grid));
 
     }
 
@@ -59,12 +59,23 @@ public class Environment {
                 ", n=" + n +
                 ", begin=" + begin +
                 ", end=" + end +
-                ", plateau=\n" + Arrays.deepToString(plateau) +
+                ", grid=\n" + Arrays.deepToString(grid) +
                 '}';
     }
 
+    public void printgrid(){
+        for (EnvironmentTile[] environmentTiles : grid) {
+            for (EnvironmentTile environmentTile : environmentTiles) {
+                System.out.print(environmentTile);
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+
     public static void main(String[] args) {
-        //Environment test=new Environment("src/main/resources/test.csv");
-        //System.out.println(test);
+        Environment test=new Environment("src/main/resources/test.csv");
+        test.printgrid();
     }
 }

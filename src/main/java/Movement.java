@@ -16,26 +16,13 @@ public enum Movement {
         this.y =y;
     }
 
-    public Movement choiceMovement(int choice){
-        switch (choice){
-            case 0: return DOWN;
-            case 1: return DOWN_RIGHT;
-            case 2: return RIGHT;
-            case 3: return UP_RIGHT;
-            case 4: return UP;
-            case 5: return UP_LEFT;
-            case 6: return LEFT;
-            case 7: return DOWN_LEFT;
-        }
-        return null;
-    }
 
     public Movement[] multiplechoiceMovement(String choice){
         char[] digits1 = choice.toCharArray();
         Movement[] movements = new Movement[digits1.length];
         int i=0;
         for (char digit:digits1) {
-            movements[i]=choiceMovement(digit);
+            movements[i]=Movement.values()[digit];
         }
         return movements;
     }
