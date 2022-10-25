@@ -7,6 +7,7 @@ public class Environment {
     private int n;
     private Coordinates begin;
     private Coordinates end;
+    private Coordinates creaturepositon;
 
     private EnvironmentTile[][] grid;
 
@@ -23,8 +24,6 @@ public class Environment {
             String [] nextLine= reader.readNext();
             m=Integer.parseInt(nextLine[0]);
             n=Integer.parseInt(nextLine[1]);
-            begin=new Coordinates(nextLine[2]);
-            end= new Coordinates(nextLine[3]);
             grid =new EnvironmentTile[m][n];
             int i=0,j=0;
             while ((nextLine = reader.readNext()) != null)
@@ -32,6 +31,15 @@ public class Environment {
                 for(String token : nextLine)
                 {
                     grid[i][j]=EnvironmentTile.values()[Integer.parseInt(token)];
+                    if(grid[i][j]==EnvironmentTile.START)
+                    {
+                        begin=new Coordinates(j,i);
+                        creaturepositon=begin;
+                    }
+                    if(grid[i][j]==EnvironmentTile.END)
+                    {
+                        end=new Coordinates(j,i);
+                    }
                     //System.out.print(token);
                     j++;
                 }
@@ -50,6 +58,41 @@ public class Environment {
 
     public void generate(){
         //TODO génerer l'environnement
+    }
+
+    private void setCreaturepositon(Coordinates newcreaturepositon) {
+        System.out.println("Creature position "+creaturepositon + "begin "+begin );
+        if(creaturepositon==begin){
+            grid[creaturepositon.getY()][creaturepositon.getX()]=EnvironmentTile.START;
+        }
+        else
+        {
+            grid[creaturepositon.getY()][creaturepositon.getX()]=EnvironmentTile.VIDE;
+        }
+        creaturepositon = newcreaturepositon;
+        grid[creaturepositon.getY()][creaturepositon.getX()]=EnvironmentTile.CREATURE;
+    }
+
+    public boolean movecreature(Movement movement){
+        System.out.println("Mouv "+movement+" X "+movement.getX()+" Y "+movement.getY());
+        Coordinates newposition=new Coordinates(creaturepositon.getX()-movement.getX(),creaturepositon.getY()-movement.getY());
+        System.out.println("Creature position "+creaturepositon+"newposition"+newposition+"|"+grid[newposition.getX()][newposition.getY()]);
+        if(grid[newposition.getY()][newposition.getX()]!=EnvironmentTile.TILE)
+        {
+            setCreaturepositon(newposition);
+            movegraviti(movement);
+            return true;
+        }
+        return false;
+    }
+    public void movegraviti(Movement movement){
+        if(movement==Movement.UP || movement==Movement.RIGHT || movement==Movement.LEFT || movement==Movement.DOWN_LEFT || movement==Movement.DOWN_RIGHT){
+            Coordinates newposition=new Coordinates(creaturepositon.getX(),creaturepositon.getY()+1);
+            if(grid[newposition.getY()][newposition.getX()]!=EnvironmentTile.TILE)
+            {
+                setCreaturepositon(newposition);
+            }
+        }
     }
 
     @Override
@@ -75,7 +118,7 @@ public class Environment {
 
 
     public static void main(String[] args) {
-        Environment test=new Environment("src/main/resources/test.csv");
-        test.printgrid();
+        //Environment test=new Environment("src/main/resources/test.csv");
+        //test.printgrid();
     }
 }
