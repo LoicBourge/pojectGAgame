@@ -1,11 +1,9 @@
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Creature {
 
     //private Environment environment;
-    private Environment environment;
+    private final Environment environment;
 
     private ArrayList<Movement> movements;
 
@@ -16,10 +14,17 @@ public class Creature {
     }
 
 
-    //TODO ajouter le mutationrate, et faire probabilité et mouvement mutate
-
-    public void mutate() {
-
+    public Creature mutate(double mutationRate) {
+        for (int i = 0; i < movements.size(); i++) {
+            Movement movement;
+            if (Math.random() <= mutationRate) {
+                do {
+                    movement = Movement.values()[(int) (1 + Math.random() * 7)];
+                } while (movement == movements.get(i));
+                movements.set(i, movement);
+            }
+        }
+        return this;
     }
 
 
@@ -32,7 +37,7 @@ public class Creature {
                 newmovements.add(b.movements.get(i));
             }
         }
-        return new Creature(environment, newmovements);
+        return new Creature(new Environment(environment), newmovements);
     }
 
     @Override
@@ -44,13 +49,10 @@ public class Creature {
     }
 
     public double getScore() {
-
         double X = environment.getCreaturepositon().getX() - environment.getEnd().getX();
         double Y = environment.getCreaturepositon().getY() - environment.getEnd().getY();
-        System.out.println("X= " + X + " Y= " + Y);
         X *= X;
         Y *= Y;
-        System.out.println("X= " + X + " Y= " + Y);
         return 1 / (Math.sqrt(X + Y));
     }
 
@@ -63,9 +65,10 @@ public class Creature {
         this.movements = movements;
     }
 
-    public int nextmove(int indice, int maxTic, boolean print) {
-        if (environment.getCreaturepositon() == environment.getEnd()) {
+    public int nextMove(int indice, int maxTic, boolean print) {
+        if (environment.getCreaturepositon().equals(environment.getEnd())) {
             movements.subList(indice, movements.size()).clear();
+            System.out.println("Fin ");
             return 0;
         }
         if (indice < getMovements().size()) {
@@ -75,8 +78,12 @@ public class Creature {
         }
         if (print) {
             System.out.println("tic restant: " + maxTic);
-            environment.printgrid();
+            environment.printGrid();
         }
         return maxTic;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
     }
 }
