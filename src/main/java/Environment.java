@@ -83,13 +83,16 @@ public class Environment {
             setCreaturepositon(newposition);
             //printgrid();
             maxtic--;
+            if(creaturepositon==end)
+            {
+                return -1;
+            }
             maxtic=movegraviti(movement,maxtic);
         }
         return maxtic;
     }
 
 
-    //TODO modifier pour prendre en compte les ticks
     public int movegraviti(Movement movement,int maxtic){
         if(movement==Movement.UP || movement==Movement.RIGHT || movement==Movement.LEFT || movement==Movement.DOWN_LEFT || movement==Movement.DOWN_RIGHT){
             Coordinates newposition=new Coordinates(creaturepositon.getX(),creaturepositon.getY()+1);

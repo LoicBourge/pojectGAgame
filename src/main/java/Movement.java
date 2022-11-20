@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public enum Movement {
     DOWN (0,1),
     DOWN_RIGHT (1,1),
@@ -24,13 +26,19 @@ public enum Movement {
         return y;
     }
 
-    public static Movement[] multiplechoiceMovement(String choice){
+    public static ArrayList<Movement> multiplechoiceMovement(String choice){
         char[] digits1 = choice.toCharArray();
-        Movement[] movements = new Movement[digits1.length];
-        int i=0;
+        ArrayList<Movement> movements= new ArrayList<>();
         for (char digit:digits1) {
-            movements[i]=Movement.values()[Character.digit(digit,10)];
-            i++;
+            movements.add(Movement.values()[Character.digit(digit,10)]);
+        }
+        return movements;
+    }
+
+    public static ArrayList<Movement> generate(int MaxTic){
+        ArrayList<Movement> movements=new ArrayList<>();
+        for (int i=0;i< MaxTic;i++){
+            movements.add(Movement.values()[(int) (1+Math.random()*7)]);
         }
         return movements;
     }

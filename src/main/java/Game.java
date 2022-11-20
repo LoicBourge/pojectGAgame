@@ -1,5 +1,7 @@
 public class Game {
     int maxTic;
+    double mutationRate=0.02;
+    double crossoverRate;
     Creature creature;
     Environment environment;
 
