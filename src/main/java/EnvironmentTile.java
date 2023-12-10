@@ -1,7 +1,7 @@
 public enum EnvironmentTile {
-    VIDE("\u00A0"),
-    TILE("\u22A0"),
-    CREATURE("\u26C4"),
+    VIDE(" "),
+    TILE("#"),
+    CREATURE("@"),
     START("\u2690"),
     END("\u2691");
 
@@ -20,4 +20,7 @@ public enum EnvironmentTile {
     public String toString() {
         return  tile;
     }
+
+
+
 }

@@ -18,12 +18,15 @@ public class Environment {
     }
 
     public Environment(Environment e) {
-        this.m =e.m;
-        this.n=e.n;
-        this.begin=e.begin;
-        this.end=e.end;
-        this.creaturepositon=e.creaturepositon;
-        this.grid=e.grid;
+        this.m = e.m;
+        this.n = e.n;
+        this.begin = e.begin;
+        this.end = e.end;
+        this.creaturepositon = e.creaturepositon;
+        this.grid = e.grid.clone();
+        for(int i=0;i<e.grid.length;i++){
+            this.grid[i]=e.grid[i].clone();
+        }
     }
 
 
@@ -89,8 +92,7 @@ public class Environment {
                 return 0;
             }
             maxtic = movegraviti(movement, maxtic);
-        }
-        else {
+        } else {
             maxtic--;
         }
         return maxtic;
@@ -107,31 +109,45 @@ public class Environment {
             }
         } else {
             if (movement == Movement.UP_LEFT) {
-                Coordinates newposition = new Coordinates(creaturepositon.getX() - 1, creaturepositon.getY() + 1);
-                while (grid[newposition.getY()][newposition.getX()] != EnvironmentTile.TILE && maxtic != 0) {
-                    setCreaturepositon(newposition);
-                    newposition = new Coordinates(creaturepositon.getX() - 1, creaturepositon.getY() + 1);
-                    maxtic--;
-                }
-                newposition = new Coordinates(creaturepositon.getX(), creaturepositon.getY() + 1);
-                while (grid[newposition.getY()][newposition.getX()] != EnvironmentTile.TILE && maxtic != 0) {
-                    setCreaturepositon(newposition);
-                    newposition = new Coordinates(creaturepositon.getX(), creaturepositon.getY() + 1);
+                Coordinates under = new Coordinates(creaturepositon.getX(), creaturepositon.getY() + 1);
+                Coordinates left = new Coordinates(creaturepositon.getX()-1, creaturepositon.getY());
+                Coordinates under_left = new Coordinates(creaturepositon.getX() - 1, creaturepositon.getY() + 1);
+                //System.out.println("Grid under :"+grid[newposition.getY()][newposition.getX()]);
+                while (grid[under.getY()][under.getX()] != EnvironmentTile.TILE && maxtic != 0) {
+                    if(grid[left.getY()][left.getX()] != EnvironmentTile.TILE){
+                        if(grid[under_left.getY()][under_left.getX()] != EnvironmentTile.TILE) {
+                            setCreaturepositon(under_left);
+                        } else {
+                            setCreaturepositon(under);
+                        }
+                    } else {
+                        setCreaturepositon(under);
+                    }
+                    under = new Coordinates(creaturepositon.getX(), creaturepositon.getY() + 1);
+                    left = new Coordinates(creaturepositon.getX()-1, creaturepositon.getY());
+                    under_left = new Coordinates(creaturepositon.getX() - 1, creaturepositon.getY() + 1);
                     maxtic--;
                 }
 
             } else {
                 if (movement == Movement.UP_RIGHT) {
-                    Coordinates newposition = new Coordinates(creaturepositon.getX() + 1, creaturepositon.getY() + 1);
-                    while (grid[newposition.getY()][newposition.getX()] != EnvironmentTile.TILE && maxtic != 0) {
-                        setCreaturepositon(newposition);
-                        newposition = new Coordinates(creaturepositon.getX() + 1, creaturepositon.getY() + 1);
-                        maxtic--;
-                    }
-                    newposition = new Coordinates(creaturepositon.getX(), creaturepositon.getY() + 1);
-                    while (grid[newposition.getY()][newposition.getX()] != EnvironmentTile.TILE && maxtic != 0) {
-                        setCreaturepositon(newposition);
-                        newposition = new Coordinates(creaturepositon.getX(), creaturepositon.getY() + 1);
+                    Coordinates under = new Coordinates(creaturepositon.getX(), creaturepositon.getY() + 1);
+                    Coordinates right = new Coordinates(creaturepositon.getX()+1, creaturepositon.getY());
+                    Coordinates under_right = new Coordinates(creaturepositon.getX() + 1, creaturepositon.getY() + 1);
+                    //System.out.println("Grid under :"+grid[newposition.getY()][newposition.getX()]);
+                    while (grid[under.getY()][under.getX()] != EnvironmentTile.TILE && maxtic != 0) {
+                        if(grid[right.getY()][right.getX()] != EnvironmentTile.TILE){
+                            if(grid[under_right.getY()][under_right.getX()] != EnvironmentTile.TILE) {
+                                setCreaturepositon(under_right);
+                            } else {
+                                setCreaturepositon(under);
+                            }
+                        } else {
+                            setCreaturepositon(under);
+                        }
+                        under = new Coordinates(creaturepositon.getX(), creaturepositon.getY() + 1);
+                        right = new Coordinates(creaturepositon.getX()+1, creaturepositon.getY());
+                        under_right = new Coordinates(creaturepositon.getX() + 1, creaturepositon.getY() + 1);
                         maxtic--;
                     }
                 }
