@@ -11,6 +11,7 @@ public class Creature {
     public Creature(Environment environment, ArrayList<Movement> movements) {
         this.environment = environment;
         this.movements = movements;
+        System.out.println(movements.size());
     }
 
 
@@ -18,9 +19,7 @@ public class Creature {
         for (int i = 0; i < movements.size(); i++) {
             Movement movement;
             if (Math.random() <= mutationRate) {
-                do {
-                    movement = Movement.values()[(int) (1 + Math.random() * 7)];
-                } while (movement == movements.get(i));
+                movement = Movement.values()[(int) (1 + Math.random() * 7)];
                 movements.set(i, movement);
             }
         }
@@ -37,6 +36,9 @@ public class Creature {
                 newmovements.add(b.movements.get(i));
             }
         }
+        System.out.println("Tailles mouvements");
+        System.out.println(movements.size());
+        System.out.println(newmovements.size());
         return new Creature(new Environment(environment), newmovements);
     }
 
@@ -45,6 +47,7 @@ public class Creature {
         return "Creature{" +
                 "environment=" + environment +
                 ", movements=" + movements +
+                ", score=" + getScore() +
                 '}';
     }
 
@@ -53,7 +56,9 @@ public class Creature {
         double Y = environment.getCreaturepositon().getY() - environment.getEnd().getY();
         X *= X;
         Y *= Y;
-        return 1 / (Math.sqrt(X + Y));
+        var availableMouvementsCount = movements.size() - movements.stream().filter(movement -> movement == Movement.IDLE).count();
+        double sqrt = Math.sqrt(X + Y);
+        return (sqrt != 0 ? 1.0 / (sqrt) : 0) + availableMouvementsCount;
     }
 
 
@@ -67,14 +72,20 @@ public class Creature {
 
     public int nextMove(int indice, int maxTic, boolean print) {
         if (environment.getCreaturepositon().equals(environment.getEnd())) {
-            movements.subList(indice, movements.size()).clear();
-            System.out.println("Fin ");
+            System.err.println("Fin ");
             return 0;
         }
         if (indice < getMovements().size()) {
             maxTic = environment.movecreature(movements.get(indice), maxTic);
+            if(maxTic == 0)
+            {
+                for(int i = indice+1; i < movements.size(); i++)
+                    movements.set(i, Movement.IDLE);
+            }
         } else {
             maxTic = 0;
+            for(int i = indice+1; i < movements.size(); i++)
+                movements.set(i, Movement.IDLE);
         }
         if (print) {
             System.out.println("tic restant: " + maxTic);

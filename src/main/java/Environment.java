@@ -63,10 +63,6 @@ public class Environment {
 
     }
 
-    public void generate() {
-        //TODO génerer l'environnement
-    }
-
     private void setCreaturepositon(Coordinates newcreaturepositon) {
         //System.out.println("Creature position " + creaturepositon + "begin " + begin);
         if (creaturepositon.equals(begin)) {
@@ -87,7 +83,10 @@ public class Environment {
             setCreaturepositon(newposition);
             //printGrid();
             maxtic--;
-            if (creaturepositon == end) {
+            System.err.println("POSITIONS:");
+            System.err.println(creaturepositon);
+            System.err.println(end);
+            if (creaturepositon.equals(end)) {
                 System.out.println("Stop");
                 return 0;
             }
@@ -170,7 +169,7 @@ public class Environment {
     public void printGrid() {
         for (EnvironmentTile[] environmentTiles : grid) {
             for (EnvironmentTile environmentTile : environmentTiles) {
-                System.out.print(environmentTile);
+                System.out.print(environmentTile + " ");
             }
             System.out.println();
         }
